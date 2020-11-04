@@ -38,7 +38,7 @@ provincias = [
 ]
 # Para registar el usuario
 REGISTEREMAIL, PROVINCIA, TELEFONO, IS_PRINTER3D, YES_IS_PRINTER3D, NO_IS_PRINTER3D, CANT_FDM, DIAMETROFILAMENTO, \
-CANT_SLA_DLP, IS_CNC, CNC, RESERVA, MATERIAL_CNC, CANTPETG, ONLYCNC = range(15)
+    CANT_SLA_DLP, IS_CNC, CNC, RESERVA, MATERIAL_CNC, CANTPETG, ONLYCNC = range(15)
 
 
 def log_errors(f):
@@ -85,7 +85,8 @@ def start(update: Update, context: CallbackContext):
 @log_errors
 def info(update: Update, context: CallbackContext):
     logger.info(f"El usuario {update.message.from_user.username} consulto info")
-    update.message.reply_text("Este bot facilita la gestion de impresionn 3D", reply_markup=ReplyKeyboardRemove())
+    update.message.reply_text("Este bot facilita la gestion de impresionn 3D",
+                              reply_markup=ReplyKeyboardRemove())
 
 
 # Empezar el registar
@@ -168,7 +169,8 @@ def registarProvincia(update: Update, context: CallbackContext):
     )
     p.provincia = provincia
     p.save()
-    update.message.reply_text(f"Provincia actualizada {provincia}", reply_markup=ReplyKeyboardRemove())
+    update.message.reply_text(
+        f"Provincia actualizada {provincia}", reply_markup=ReplyKeyboardRemove())
     reply_keyboard = [['Si', 'No', ]]
     update.message.reply_text(
         "Tienes impresora?",
