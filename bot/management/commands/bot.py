@@ -2,142 +2,86 @@ import logging
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from telegram import Bot, Update, ReplyKeyboardRemove, ReplyKeyboardMarkup
-from telegram.ext import CallbackContext, Filters, MessageHandler, Updater, CommandHandler, ConversationHandler
-from telegram.utils.request import Request
 
 from bot.management import commands
 from bot.models import Profile
-
 
 from telethon.sync import TelegramClient
 from telethon.tl.functions.messages import GetDialogsRequest
 from telethon.tl.types import InputPeerEmpty
 
+import csv
 # Bot Import
 
-# Enable logging
-logging.basicConfig(
-    format=' ######### %(asctime)s - %(name)s - %(levelname)s - %(message)s #########',
-    level=logging.INFO)
-
-logger = logging.getLogger(__name__)
-
-
-def log_errors(f):
-    def inner(*args, **kwargs):
-        try:
-            return f(*args, **kwargs)
-        except Exception as e:
-            error_message = f'Error log: {e} '
-            print(error_message)
-            raise e
-
-    return inner
-
-
-@log_errors
-def start(update: Update, context: CallbackContext):
-    logger.info(f"El usuario {update.message.from_user.username} consulto start")
-    text = """
-    Listado de comando a usar:
-    /info - Propósito del bot
-    """
-    update.message.reply_text(text)
-    p, _ = Profile.objects.get_or_create(
-        external_id=update.message.from_user.id,
-        defaults={
-            'username': update.message.from_user.username,
-
-        }
-    )
-
-
-@log_errors
-def info(update: Update, context: CallbackContext):
-    logger.info(f"El usuario {update.message.from_user.username} consulto info")
-    update.message.reply_text("Este bot facilita la gestion de user MasterCard",
-                              reply_markup=ReplyKeyboardRemove())
-
-
-@log_errors
-def prueba(update: Update, context: CallbackContext):
-    logger.info(f"El usuario {update.effective_user.username}")
-    id_group =0
-    if update.effective_chat:
-        id_group = update.effective_chat.id
-    update.message.reply_text("Cantidad de usuarios en el chat "+str(id_group))
-
-
-# Cancelar el registro
-@log_errors
-def cancel(update: Update, context: CallbackContext):
-    logger.info(f"El usuario {update.message.from_user.username} consulto cancelar")
-    update.message.reply_text('Cancelada el registro')
-    return ConversationHandler.END
-
-
 # Iniciacion del comando `bot`
+
+
 class Command(BaseCommand):
-    help = "PrinterControlBot"
+    help = "MasterCardCubaBot"
 
     def handle(self, *args, **options):
-        request = Request(
-            connect_timeout=0.5,
-            read_timeout=1.0,
-        )
+        print("Hola")
 
-        bot = Bot(
-            request=request,
-            token=settings.TOKEN,
-        )
-        update = Updater(
-            bot=bot,
-            use_context=True,
-        )
-        dp = update.dispatcher
-        dp.add_handler(CommandHandler("start", start))
-        dp.add_handler(CommandHandler("info", info))
-        dp.add_handler(CommandHandler("prueba", prueba))
+        api_id = 2720778
+        api_hash = 'bc4216381cb7f3ceb3275baf6f8c1566'
+        phone = '+5355282225'
+        client = TelegramClient(phone, api_id, api_hash)
+        client.connect()
+        if not client.is_user_authorized():
+            client.send_code_request(phone)
+            client.sign_in(phone, input('Enter the code: '))
 
-        # Registar completp
-#         conv_handler = ConversationHandler(
-        # entry_points=[CommandHandler('registrar3d', registar3d)],
+        chats = []
+        last_date = None
+        chunk_size = 1000
+        groups = []
 
-        # states={
-        # REGISTEREMAIL: [MessageHandler(Filters.text, registeremail)],
-        # TELEFONO: [MessageHandler(Filters.text, registrarphone),
-        # CommandHandler('skip', skip_phone)],
-        # PROVINCIA: [MessageHandler(Filters.text, registarProvincia)],
-        # IS_PRINTER3D: [MessageHandler(Filters.regex('^(Si|No)$'), registar_isPrinter3D)],
-        # CANT_FDM: [MessageHandler(Filters.text, register_FDM)],
-        # DIAMETROFILAMENTO: [MessageHandler(Filters.text, registarDiametroFilamento)],
-        # CANT_SLA_DLP: [MessageHandler(Filters.text, registarCant_SLA_DLP)],
-        # IS_CNC: [MessageHandler(Filters.regex('^(Si|No)$'), register_isCNC)],
-        # CNC: [MessageHandler(Filters.text, register_CNC)],
-        # MATERIAL_CNC: [MessageHandler(Filters.text, registerMaterialCNC)],
-        # RESERVA: [MessageHandler(Filters.text, registarMateriles)],
-        # CANTPETG: [MessageHandler(Filters.text, registarCantPETG)],
-        # },
+        result = client(GetDialogsRequest(
+            offset_date=last_date,
+            offset_id=0,
+            offset_peer=InputPeerEmpty(),
+            limit=chunk_size,
+            hash=0
+        ))
 
-        # fallbacks=[CommandHandler('cancel', cancel)],
+        chats.extend(result.chats)
 
-        # )
-        # dp.add_handler(conv_handler)
+        for chat in chats:
+            try:
+                if chat.megagroup == True:
+                    groups.append(chat)
+            except:
+                continue
 
-        # # Regsitrar solo CNC
-        # registar_CNC_Only = ConversationHandler(
-        # entry_points=[CommandHandler('registrar_cnc', registarCNCOnly)],
+        i = 0
+        for g in groups:
+            print(str(i) + '- ' + g.title)
+            i += 1
 
-        # states={
-        # CNC: [MessageHandler(Filters.text, register_CNC)],
-        # MATERIAL_CNC: [MessageHandler(Filters.text, registerMaterialCNC)],
-        # },
+        g_index = input("Enter a Number: ")
+        target_group = groups[int(g_index)]
+        print('Fetching Members...')
+        all_participants = []
+        all_participants = client.get_participants(target_group, aggressive=True)
 
-        # fallbacks=[CommandHandler('cancel', cancel)],
-
-        # )
-        # dp.add_handler(registar_CNC_Only)
-        update.start_polling()
-        print('I live')
-        update.idle()
+        print('Saving In file...')
+        with open("members.csv", "w", encoding='UTF-8') as f:
+            writer = csv.writer(f, delimiter=",", lineterminator="\n")
+            writer.writerow(['username', 'user id', 'access hash', 'name', 'group', 'group id'])
+            for user in all_participants:
+                if user.username:
+                    username = user.username
+                else:
+                    username = ""
+                if user.first_name:
+                    first_name = user.first_name
+                else:
+                    first_name = ""
+                if user.last_name:
+                    last_name = user.last_name
+                else:
+                    last_name = ""
+                name = (first_name + ' ' + last_name).strip()
+                writer.writerow([username, user.id, user.access_hash,
+                                 name, target_group.title, target_group.id])
+        print('Members scraped successfully.')
