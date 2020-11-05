@@ -87,8 +87,8 @@ n = 0
 for user in users:
     n += 1
     if n % 50 == 0:
-        print("Waiting 1-5 min")
-        time.sleep(random.randrange(60, 360))
+        print("Waiting 15-30 seg")
+        time.sleep(random.randrange(15, 30))
         try:
             print("Adding {}".format(user['id']))
             if mode == 1:
