@@ -29,6 +29,12 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # AdminLET
+    # General use templates & template tags (should appear first)
+    'adminlte3',
+    # Optional: Django admin theme (must be before django.contrib.admin)
+    'adminlte3_theme',
+
     'bot',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -115,4 +121,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 TOKEN = '1475453832:AAHvbMd3JV-r61bCmY20ysqP_FkD4-9UINw'
-
+API_ID = 2720778
+API_HASH = "bc4216381cb7f3ceb3275baf6f8c1566"
+PHONE = "+5355282225"
+
