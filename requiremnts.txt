@@ -1,4 +1,0 @@
-django
-python-telegram-bot
-django-adminlte-3
-telethon
