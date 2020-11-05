@@ -97,9 +97,9 @@ for user in users:
     n += 1
     if n % 50 == 0:
         print("Waiting 15-30 seg")
-        time.sleep(random.randrange(15, 30))
+        time.sleep(1)
         try:
-            print(f"Adding {user['id']} is {user[username]}")
+            print(f"Adding {user['id']} is {user['username']}")
             if mode == 1:
                 if user['username'] == "":
                     continue
