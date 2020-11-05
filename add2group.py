@@ -59,7 +59,7 @@ result = client(GetDialogsRequest(
     offset_peer=InputPeerEmpty(),
     limit=chunk_size,
     hash=0
-))
+    ))
 chats.extend(result.chats)
 
 for chat in chats:
@@ -78,6 +78,13 @@ print(gr+'[+] Choose a group to add members')
 g_index = input(gr+"[+] Enter a Number : "+re)
 target_group = groups[int(g_index)]
 
+all_participants = []
+all_participants = client.get_participants(target_group, aggressive=True)
+for u in users:
+    for p in all_participants:
+        if u['id'] == p.id:
+            print(f'Borrado {u["username"]} ')
+            users.remove(u)
 target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
 
 print(gr+"[1] add member by user ID\n[2] add member by username ")
@@ -100,11 +107,11 @@ for user in users:
             else:
                 sys.exit(re+"[!] Invalid Mode Selected. Please Try Again.")
             client(InviteToChannelRequest(target_group_entity, [user_to_add]))
-            print(gr+"[+] Waiting for 1m-5m ")
-            time.sleep(random.randrange(60, 360))
+            print(gr+"[+] Waiting for 30 seg - 1 min ")
+            time.sleep(random.randrange(15, 30))
         except PeerFloodError:
             print(
-                re+"[!] Getting Flood Error from telegram. \n[!] Script is stopping now. \n[!] Please try again after some time.")
+                    re+"[!] Getting Flood Error from telegram. \n[!] Script is stopping now. \n[!] Please try again after some time.")
         except UserPrivacyRestrictedError:
             print(re+"[!] The user's privacy settings do not allow you to do this. Skipping.")
         except:
