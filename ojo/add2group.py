@@ -1,8 +1,4 @@
-#!/bin/env python3
-from telethon.sync import TelegramClient
-from telethon.tl.functions.messages import GetDialogsRequest
-from telethon.tl.types import InputPeerEmpty, InputPeerChannel, InputPeerUser
-from telethon.errors.rpcerrorlist import PeerFloodError, UserPrivacyRestrictedError
+#!/bin/env p
 from telethon.tl.functions.channels import InviteToChannelRequest
 import configparser
 import os

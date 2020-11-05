@@ -12,15 +12,7 @@ def loadUser(id):
         phone,
         api_id,
         api_hash,
-        # Use one of the available connection modes.
-        # Normally, this one works with most proxies.
         connection=connection.ConnectionTcpMTProxyRandomizedIntermediate,
-
-        # Then, pass the proxy details as a tuple:
-        #     (host name, port, proxy secret)
-        #
-        # If the proxy has no secret, the secret must be:
-        #     '00000000000000000000000000000000'
         proxy=('proxy.digitalresistance.dog', 443, 'd41d8cd98f00b204e9800998ecf8427e')
     )
     client.connect()
