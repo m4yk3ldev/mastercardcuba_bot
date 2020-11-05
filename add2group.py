@@ -80,6 +80,7 @@ target_group = groups[int(g_index)]
 
 all_participants = []
 all_participants = client.get_participants(target_group, aggressive=True)
+len_user_antes = len(users)
 for u in users:
     for p in all_participants:
         if u['id'] == p.id:
@@ -87,6 +88,7 @@ for u in users:
             users.remove(u)
 target_group_entity = InputPeerChannel(target_group.id, target_group.access_hash)
 
+print(f"De {len_user_antes} users quedaron {len(users)} ")
 print(gr+"[1] add member by user ID\n[2] add member by username ")
 mode = int(input(gr+"Input : "+re))
 n = 0
