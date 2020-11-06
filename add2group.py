@@ -59,7 +59,7 @@ result = client(GetDialogsRequest(
     offset_peer=InputPeerEmpty(),
     limit=chunk_size,
     hash=0
-))
+    ))
 chats.extend(result.chats)
 
 for chat in chats:
@@ -98,7 +98,7 @@ for user in users:
     if n % 5 != 0:
         time.sleep(1)
         try:
-            print(f"Adding {user['id']} is {user['username']}")
+            print(f"Adding {user['id']} is {user['name']}")
             if mode == 1:
                 if user['username'] == "":
                     continue
@@ -112,7 +112,7 @@ for user in users:
             time.sleep(random.randrange(60, 300))
         except PeerFloodError:
             print(
-                re+"[!] Getting Flood Error from telegram. \n[!] Script is stopping now. \n[!] Please try again after some time.")
+                    re+"[!] Getting Flood Error from telegram. \n[!] Script is stopping now. \n[!] Please try again after some time.")
 
             print(gr+"[+] Waiting for 5 min - 10 min ")
             time.sleep(random.randrange(300, 600))
