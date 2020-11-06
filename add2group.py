@@ -11,9 +11,9 @@ import traceback
 import time
 import random
 
-re="\033[1;31m"
-gr="\033[1;32m"
-cy="\033[1;36m"
+re = "\033[1;31m"
+gr = "\033[1;32m"
+cy = "\033[1;36m"
 
 cpass = configparser.RawConfigParser()
 cpass.read('config.data')
@@ -59,7 +59,7 @@ result = client(GetDialogsRequest(
     offset_peer=InputPeerEmpty(),
     limit=chunk_size,
     hash=0
-    ))
+))
 chats.extend(result.chats)
 
 for chat in chats:
@@ -95,8 +95,7 @@ n = 0
 
 for user in users:
     n += 1
-    if n % 50 == 0:
-        print("Waiting 15-30 seg")
+    if n % 5 != 0:
         time.sleep(1)
         try:
             print(f"Adding {user['id']} is {user['username']}")
@@ -109,14 +108,20 @@ for user in users:
             else:
                 sys.exit(re+"[!] Invalid Mode Selected. Please Try Again.")
             client(InviteToChannelRequest(target_group_entity, [user_to_add]))
-            print(gr+"[+] Waiting for 30 seg - 1 min ")
-            time.sleep(random.randrange(15, 30))
+            print(gr+"[+] Waiting for 1 min - 5 min ")
+            time.sleep(random.randrange(60, 300))
         except PeerFloodError:
             print(
-                    re+"[!] Getting Flood Error from telegram. \n[!] Script is stopping now. \n[!] Please try again after some time.")
+                re+"[!] Getting Flood Error from telegram. \n[!] Script is stopping now. \n[!] Please try again after some time.")
+
+            print(gr+"[+] Waiting for 5 min - 10 min ")
+            time.sleep(random.randrange(300, 600))
         except UserPrivacyRestrictedError:
             print(re+"[!] The user's privacy settings do not allow you to do this. Skipping.")
         except:
             traceback.print_exc()
             print(re+"[!] Unexpected Error")
             continue
+    else:
+        print(gr+"[+] Warning pass 6 min-10 min ")
+        time.sleep(random.randrange(300, 600))
