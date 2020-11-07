@@ -185,7 +185,7 @@ if __name__ == '__main__':
 
                         if success:
                             print("Wait 1m - 5m")
-                            time.sleep(random.randrange(60,300))
+                            time.sleep(random.randrange(60, 300))
                         else:
                             user_rows.insert(0, row)
                             break
