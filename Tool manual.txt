@@ -1,0 +1,23 @@
+Step 1. open phone.csv file in notepad ++ and enter your telegram account
+
+Step 2. now open api.csv file and enter Api id and Hash id 
+         
+       step 2.1 > go to this website https://my.telegram.org/auth to create api id and hash id 
+       step 2.2 > enter your number with country code and then enter otp
+       step 2.3 > enter random details in every field and click continue
+       step 2.4 > copy api id and hash id
+
+step 3. open config file and enter target group username in From_Channel option 
+and your group username in To_channel option also enter any number from phone.csv file in main number
+
+Step 4. Run login.py file and enter all otp and press enter
+
+step 5. run Export file and export members from group
+
+step 6. run add.py file to add members in your group
+	
+       step 6.1 > type cmd in address bar and press enter
+       step 6.2 > now command prompt open (black screen) type add.py and press enter
+
+
+
