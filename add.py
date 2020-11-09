@@ -69,6 +69,7 @@ def add_user_to_channel(client: TelegramClient, user: types.User, channel) -> bo
 
         except errors.FloodWaitError as e:
             status = f"Wait {e.seconds} seconds. Skipped!"
+            print(status)
             time.sleep(e.seconds)
         except errors.PeerFloodError as e:
             status = f"Getting Flood Error from telegram."
